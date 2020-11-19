@@ -43,6 +43,7 @@ abstract class Elem2 {
 }
 
 data class BasicElem(override val content: Array<String>) : Elem2() {
+
     override fun toString(): String = myToString()
 
     override fun equals(other: Any?): Boolean {
