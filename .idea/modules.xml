@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/expr/expr.iml" filepath="$PROJECT_DIR$/expr/expr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/gopaskotlin2020.iml" filepath="$PROJECT_DIR$/.idea/gopaskotlin2020.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hello/hello.iml" filepath="$PROJECT_DIR$/hello/hello.iml" />
+      <module fileurl="file://$PROJECT_DIR$/elems/mainModule.iml" filepath="$PROJECT_DIR$/elems/mainModule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rac/rac.iml" filepath="$PROJECT_DIR$/rac/rac.iml" />
+    </modules>
+  </component>
+</project>
