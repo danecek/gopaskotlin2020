@@ -10,7 +10,7 @@ enum class Oper {
 }
 
 enum class OperVariant(val repr: String) {
-    PLUS("-"),
+    PLUS("+"),
     MINUS("-");
 
     override fun toString(): String = repr
