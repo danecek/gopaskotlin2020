@@ -1,17 +1,11 @@
 package expr
 
-enum class Oper {
-    MINUS {
-        override fun toString(): String = "-"
-    },
-    PLUS {
-        override fun toString(): String = "+"
-    }
-}
-
-enum class OperVariant(val repr: String) {
-    PLUS("+"),
-    MINUS("-");
+enum class Oper(val repr: String, val pri: Int) {
+    PLUS("+", 2),
+    MINUS("-", 2),
+    TIMES("*", 1),
+    DIV("/", 1)
+    ;
 
     override fun toString(): String = repr
 
