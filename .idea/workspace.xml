@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="33000085-e3b0-47ed-a4fd-fd7ef24d8810" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/elems/mainModule.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/expr/expr.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rac/rac.iml" beforeDir="false" />
-    </list>
+    <list default="true" id="33000085-e3b0-47ed-a4fd-fd7ef24d8810" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,7 +33,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/elems" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/osoby" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -54,10 +50,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="371" y="125" key="FileChooserDialogImpl" timestamp="1605803771239">
+    <state x="371" y="125" key="FileChooserDialogImpl" timestamp="1605892051457">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state x="371" y="125" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1605803771239" />
+    <state x="371" y="125" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1605892051457" />
     <state x="165" y="10" key="SettingsEditor" timestamp="1605803742170">
       <screen x="0" y="0" width="1368" height="872" />
     </state>

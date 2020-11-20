@@ -1,12 +1,36 @@
 import java.util.*
 
+sealed class Either<T, U> {
+    class Left<T, U>(val error: T) : Either<T, U>() {
+        override fun toString(): String {
+            return "Left($error)"
+        }
+    }
+
+    class Right<T, U>(val value: U) : Either<T, U>() {
+        override fun toString(): String {
+            return "Right($value)"
+        }
+    }
+
+    fun <R> flatMap(block: U.() -> Either<T, R>): Either<T, R> {
+        return when (this) {
+            is Left -> Left(error)
+            is Right -> {
+                block(this.value)
+            }
+        }
+    }
+}
+
+
 class Osoba(
     val name: String, var rodic: Osoba? = null,
     val deti: MutableMap<String, Osoba> = mutableMapOf()
 ) {
     //*************************************** Klasicky
     fun diteC(name: String): Osoba? {
-        return deti.get(name)
+        return deti[name]
     }
 
     fun vnukC(dite: String, vnuk: String): Osoba? {
@@ -20,9 +44,10 @@ class Osoba(
         return if (vnk == null) null
         else vnk.deti[pravnuk]
     }
-//*************************************** Monada
+
+    //*************************************** Monada Optional
     fun diteO(name: String): Optional<Osoba> {
-        return Optional.ofNullable(deti.get(name))
+        return Optional.ofNullable(deti[name])
     }
 
     fun vnukO(dite: String, vnuk: String): Optional<Osoba> {
@@ -30,33 +55,22 @@ class Osoba(
     }
 
     fun praVnukO(dite: String, vnuk: String, pravnuk: String): Optional<Osoba> {
-        return vnukO(dite, pravnuk).flatMap { diteO(pravnuk) }
+        return vnukO(dite, vnuk).flatMap { diteO(pravnuk) }
     }
 
-    //*************************************** Either
-    open class Either<out T, out U> {
-       class Left<out T, out U>(val error: T) : Either<T, U>()
-       class Right<out T, out U>(val value: U) : Either<T, U>()
-    }
-    val l : Either<Any, Any> = Either.Left("chyha")
+    //*************************************** Monada Either
+    fun diteE(_name: String): Either<String, Osoba> =
+        deti[_name]?.let {
+            Either.Right(it)
+        } ?: Either.Left("$name nema dite: $_name")
 
-    fun x (s: String): Either<Exception, Int> {
-        return try {
-            Either.Right(s.toInt())
-        } catch (e:java.lang.Exception) {  return Either.Left(e) }
-    }
 
-    fun diteE(name: String): Optional<Osoba> {
-        return Optional.ofNullable(deti.get(name))
-    }
+    fun vnukE(dite: String, vnuk: String): Either<String, Osoba> =
+        this.diteE(dite).flatMap { diteE(vnuk) }
 
-    fun vnukE(dite: String, vnuk: String): Optional<Osoba> {
-        return diteO(dite).flatMap { diteO(vnuk) }
-    }
 
-    fun praVnukE(dite: String, vnuk: String, pravnuk: String): Optional<Osoba> {
-        return vnukO(dite, pravnuk).flatMap { diteO(pravnuk) }
-    }
+    fun praVnukE(dite: String, vnuk: String, pravnuk: String): Either<String, Osoba> =
+        diteE(dite).flatMap { diteE(vnuk) }.flatMap { diteE(pravnuk) }
 
 
     //*************************************** Kotlin
@@ -89,8 +103,7 @@ class Osoba(
     }
 
     override fun toString(): String {
-        val d = if (deti.isEmpty()) "" else ":\n" + deti
-        return "$name$d"
+        return "$name${if (deti.isEmpty()) "" else ": " + deti.values}"
     }
 
     fun print(n: Int) {
@@ -99,45 +112,36 @@ class Osoba(
     }
 }
 
-fun patriarcha(name: String, potomci: (Osoba.() -> Unit)): Osoba {
-    val patr = Osoba(name)
-    potomci.invoke(patr)
-    return patr
-}
-
-fun Osoba.rodic(name: String, potomci: (Osoba.() -> Unit)) {
-    val dite = Osoba(name)
-    this.addDite(dite)
-    potomci.invoke(dite)
-}
-
-fun Osoba.potomek(name: String) {
-    val dite = Osoba(name)
-    this.addDite(dite)
+fun Osoba.potomek(name: String, potomci: (Osoba.() -> Unit)? = null) {
+    val potomek = Osoba(name)
+    val predek = this
+    predek.addDite(potomek)
+    potomci?.invoke(potomek) // if (potomci!=null) potomek.potomci()
 }
 
 fun main() {
-    val patr = patriarcha("praded") {
-        rodic("ded1") {
-            rodic("otec") {
+    val praded = Osoba("praded").apply {
+        potomek("ded") {
+            potomek("otec") {
                 potomek("vnuk1")
                 potomek("vnuk2")
             }
-            rodic("matka") {
+            potomek("matka") {
 
             }
         }
-        rodic("ded2") {
+        potomek("babi") {
             potomek("otec2")
         }
     }
-    patr.print(0)
-    println(patr)
-    println(patr.vnuci())
-    println(patr.pravnuci())
-    println(patr.vnuk("ded", "otec"))
-}
+    println(praded.diteE("ded"))
+    println(praded.vnukE("ded", "otec"))
+    println(praded.praVnukE("ded", "otec", "vnuk1"))
+    println(praded.praVnukE("ded", "otec", "vnuk"))
 
- open class  Either<out T, out V> {
-    class Left<out T, out V> (val l: T) : Either<T, V>()
+    praded.print(0)
+    println("praded = $praded")
+    println("praded.vnuci: ${praded.vnuci().map { it.name }}")
+    println("praded.pravnuci: ${praded.pravnuci().map { it.name }}")
+    println(praded.pravnuk("ded", "otec", "vnuk1"))
 }
