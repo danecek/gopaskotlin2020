@@ -2,48 +2,51 @@ package osoby
 
 import java.util.*
 
-class Osoba(val name: String, var rodic: Osoba? = null, val deti : MutableMap<String, Osoba> = mutableMapOf()) {
+class Osoba(val name: String, var rodic: Osoba? = null, val deti: MutableMap<String, Osoba> = mutableMapOf()) {
 
-   fun addPotomek(potomek: Osoba) {
-       potomek.rodic = this
-       deti[potomek.name] = potomek
-   }
+    fun addPotomek(potomek: Osoba) {
+        potomek.rodic = this
+        deti[potomek.name] = potomek
+    }
 
-   fun najdiVnukaClassik(diteS: String, vnukS: String) : Osoba? {
+    fun najdiDite(diteS: String): Optional<Osoba> {
+        return Optional.ofNullable(deti[diteS])
+    }
 
-   }
-    fun najdiVnukaFunctional(diteS: String, vnukS: String) : Optional<Osoba> {
+    fun najdiVnukaFunctional(diteS: String, vnukS: String): Optional<Osoba> {
+        return Optional.ofNullable(deti[diteS]).flatMap { Optional.ofNullable(it.deti[vnukS]) }
+    }
+
+    fun najdiVnukaKotlin(diteS: String, vnukS: String): Osoba? {
+        return null;
 
     }
-    fun najdiVnukaKotlin(diteS: String, vnukS: String) : Osoba? {
 
+    override fun toString(): String {
+        return "Osoba(name='$name', deti=$deti)"
     }
+
 }
 
-fun Osoba.rodic(name: String, potomci: Osoba.(name: String) -> Unit) {
+fun Osoba.potomek(name: String, potomci: (Osoba.() -> Unit)? = null) {
 
 }
 
 fun main(args: Array<String>) {
-    println("Hello World!")
-    val ded = Osoba("ded")
-    val otec = Osoba("otec")
-    val vnuk = Osoba("vnuk")
-    ded.addPotomek(otec)
-    otec.addPotomek(vnuk)
-    val patr = patriarcha("praded") {
-        this.rodic("ded1") {
-            this.rodic("otec") {
-                this. potomek("vnuk1")
-                this.potomek("vnuk2")
+    val praded = Osoba("praded").apply {
+        potomek("ded1") {
+            potomek("otec") {
+                potomek("vnuk1")
+                potomek("vnuk2")
             }
-            this.rodic("matka") {
+            potomek("matka") {
 
             }
         }
-        this.rodic("ded2") {
-            this.potomek("otec2")
+        potomek("ded2") {
+            potomek("otec2")
         }
     }
-    println(ded.najdiVnukaClassik("otec", "vnuk"))
+
+    println(praded.najdiVnukaFunctional("ded1", "otec").get())
 }
