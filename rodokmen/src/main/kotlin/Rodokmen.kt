@@ -113,3 +113,7 @@ fun main() {
     println(patr.pravnuci())
     println(patr.vnuk("ded", "otec"))
 }
+
+ open class  Either<out T, out V> {
+    class Left<out T, out V> (val l: T) : Either<T, V>()
+}
