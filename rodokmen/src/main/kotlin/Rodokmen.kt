@@ -1,7 +1,46 @@
-data class Osoba(
+import java.util.*
+
+class Osoba(
     val name: String, var rodic: Osoba? = null,
     val deti: MutableMap<String, Osoba> = mutableMapOf()
 ) {
+    //*************************************** Klasicky
+    fun diteC(name: String): Osoba? {
+        return deti.get(name)
+    }
+
+    fun vnukC(dite: String, vnuk: String): Osoba? {
+        val dit: Osoba? = diteC(dite)
+        return if (dit == null) null
+        else dit.deti[vnuk]
+    }
+
+    fun praVnukC(dite: String, vnuk: String, pravnuk: String): Osoba? {
+        val vnk: Osoba? = vnukC(dite, vnuk)
+        return if (vnk == null) null
+        else vnk.deti[pravnuk]
+    }
+//*************************************** Monada
+    fun diteO(name: String): Optional<Osoba> {
+        return Optional.ofNullable(deti.get(name))
+    }
+
+    fun vnukO(dite: String, vnuk: String): Optional<Osoba> {
+        return diteO(dite).flatMap { diteO(vnuk) }
+    }
+
+    fun praVnukO(dite: String, vnuk: String, pravnuk: String): Optional<Osoba> {
+        return vnukO(dite, pravnuk).flatMap { diteO(pravnuk) }
+    }
+
+    //*************************************** Kotlin
+    fun dite(dite: String): Osoba? = deti[dite]
+
+    fun vnuk(dite: String, vnuk: String): Osoba? = deti[dite]?.deti?.get(vnuk)
+
+    fun pravnuk(dite: String, vnuk: String, pravnuk: String): Osoba? =
+        deti[dite]?.deti?.get(vnuk)?.deti?.get(pravnuk)
+
 
     fun deti(): Collection<Osoba> {
         return deti.values
@@ -18,10 +57,7 @@ data class Osoba(
     fun praprodic(): Osoba? = rodic?.rodic
     fun praprarodic(): Osoba? = praprodic()?.rodic
 
-    fun vnuk(dite: String, vnuk: String): Osoba? = deti[dite]?.deti?.get(vnuk)
 
-    fun pravnuk(dite: String, vnuk: String, pravnuk: String): Osoba? =
-        deti[dite]?.deti?.get(vnuk)?.deti?.get(pravnuk)
 
     fun addDite(o: Osoba) {
         deti[o.name] = (o)
@@ -41,7 +77,7 @@ data class Osoba(
 
 fun patriarcha(name: String, potomci: (Osoba.() -> Unit)): Osoba {
     val patr = Osoba(name)
-     potomci.invoke(patr)
+    potomci.invoke(patr)
     return patr
 }
 
